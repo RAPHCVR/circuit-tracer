@@ -900,5 +900,10 @@ class TransformerLensReplacementModel(HookedTransformer):
         return generation, logits.squeeze(0), activations
 
     def __del__(self):
-        # Prevent memory leaks
-        self.reset_hooks(including_permanent=True)
+        # Prevent memory leaks.
+        # In some environments (notably interactive notebooks / Streamlit reloads),
+        # Python finalization order can be surprising; avoid noisy teardown tracebacks.
+        try:
+            self.reset_hooks(including_permanent=True)
+        except Exception:
+            pass

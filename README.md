@@ -15,12 +15,72 @@ You can also find circuits and visualize them in one of three ways:
 2. Run `circuit-tracer` via a Python script or Jupyter notebook. Start with our [tutorial notebook](https://github.com/safety-research/circuit-tracer/blob/main/demos/circuit_tracing_tutorial.ipynb). This will work on Colab with the GPU resources provided for free by default - just click on the Colab badge! Check out the **Demos** section below for more tutorials. You can also run these demo notebooks locally, with your own compute.
 3. Run `circuit-tracer` via the command-line interface. This can only be done with your own compute. For more on how to do that, see **Command-Line Interface**. 
 
+## Streamlit Dashboard (local POC)
+This repo also includes a small Streamlit app (`app.py`) intended for demoing:
+- target-logit attribution summaries (pick a “crux token” among top logits),
+- influence-ranked feature lists,
+- next-token validation via `feature_intervention` (before/after distributions),
+- activation-level validation (before/after feature activations for selected nodes),
+- intervention strength sweeps (probability vs. scale),
+- JSON export of results.
+
+Recommended quickstart with `uv`:
+```bash
+uv sync --extra dev
+uv run streamlit run app.py
+```
+
+Run it with:
+```bash
+./run.sh
+```
+
+On Windows / PowerShell:
+```powershell
+.\run.ps1
+```
+
+For a short, enterprise-friendly demo script, see `DEMO.md`.
+
+You can also generate demo artifacts (Markdown + JSON) from the CLI:
+```powershell
+.venv\Scripts\python.exe demo_cli.py --preset capitale_fr
+```
+
+The launcher scripts already handle both a local `.venv` and `uv`:
+- `run.sh` / `run.ps1` prefer the project virtualenv when present,
+- otherwise they fall back to `uv run`.
+
+There is currently no maintained Docker image / `Dockerfile` in this repo; the supported path is local Python execution.
+
 Working with Gemma-2 (2B) is possible with relatively limited GPU resources; Colab GPUs have 15GB of RAM. More GPU RAM will allow you to do less offloading, and to use a larger batch size. 
 
 Currently, intervening on models with respect to the transcoder features you discover in your graphs is possible both when using `circuit-tracer` in a script or notebook, or on Neuronpedia for Gemma-2 (2B). To perform interventions on Neuronpedia, ensure at least one node is pinned, then click "Steer" in the subgraph.
 
 ## Installation
 To install this library, clone it and run the command  `pip install .` in its directory.
+
+For local dashboard/demo work, `uv` is the easiest setup:
+
+```bash
+uv sync --extra dev
+```
+
+Optional extras:
+- `uv sync --extra dev --extra viz` if you want Python `graphviz` support for rendered graphs
+- `huggingface-cli login` before the first run if the selected model/transcoders require authentication
+
+Then launch:
+
+```bash
+./run.sh
+```
+
+On Windows / PowerShell:
+
+```powershell
+.\run.ps1
+```
 
 ## Demos
 We include some demos showing how to use our library in the `demos` folder. The main demo is [`demos/circuit_tracing_tutorial.ipynb`](https://github.com/safety-research/circuit-tracer/blob/main/demos/circuit_tracing_tutorial.ipynb), which replicates two of the findings from [this paper](https://transformer-circuits.pub/2025/attribution-graphs/biology.html) using Gemma 2 (2B). All demos except for the Llama demo can be run on Colab.

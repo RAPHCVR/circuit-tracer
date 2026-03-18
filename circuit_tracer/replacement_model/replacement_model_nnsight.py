@@ -80,9 +80,16 @@ class NNSightReplacementModel(LanguageModel):
         """
         config._attn_implementation = "eager"  # type: ignore
         hf_model = AutoModelForCausalLM.from_config(config)
+        hf_model.config = config
         hf_tokenizer = AutoTokenizer.from_pretrained(config._name_or_path)  # type: ignore
 
-        model = cls(hf_model, tokenizer=hf_tokenizer, dispatch=True, **kwargs)
+        model = cls(
+            hf_model,
+            config_model=config,
+            tokenizer=hf_tokenizer,
+            dispatch=True,
+            **kwargs,
+        )
         model.config = config  # type: ignore
         model._configure_replacement_model(transcoders)
         return model
@@ -138,7 +145,7 @@ class NNSightReplacementModel(LanguageModel):
 
         super(cls, model).__init__(
             model_name,
-            config=config,
+            config_model=config,
             device_map=device_map,
             dispatch=True,
             dtype=dtype,

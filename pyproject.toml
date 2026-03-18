@@ -11,9 +11,11 @@ dependencies = [
     "ipywidgets>=8.1.7",
     "nnsight>=0.5.13",
     "numpy>=1.24.0",
+    "pandas>=2.0.0",
     "pydantic>=2.0.0",
     "safetensors>=0.5.0",
     "seaborn>=0.13.2",
+    "streamlit>=1.32.0",
     "tokenizers>=0.21.0",
     "torch>=2.0.0",
     "tqdm>=4.60.0",
@@ -23,6 +25,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0.0", "ruff>=0.12.7", "pyright>=1.1.403", "ipython>=8.37.0"]
+viz = ["graphviz>=0.20.3"]
 
 [project.scripts]
 circuit-tracer = "circuit_tracer.__main__:main"
@@ -34,14 +37,10 @@ build-backend = "hatchling.build"
 [tool.ruff]
 line-length = 100
 exclude = ["*.ipynb", "demos"]
-ignore = ["E501"]
 
 [tool.ruff.lint]
-select = [
-    "E",   # pycodestyle errors
-    "F",   # pyflakes
-    "TID", # flake8-tidy-imports (includes TID251 for banned-api)
-]
+select = ["E", "F", "TID"]
+ignore = ["E501"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "typing.Union".msg = "Use `|` instead"
@@ -62,4 +61,18 @@ markers = [
 [dependency-groups]
 dev = [
     "pytest>=8.4.2",
+    "ruff>=0.12.7",
+    "pyright>=1.1.403",
+]
+
+# Optional: if you install with `uv`, this pins `torch` to the official PyTorch CUDA
+# wheel index (instead of PyPI). Adjust/remove if you want CPU-only or macOS installs.
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu126" },
 ]
