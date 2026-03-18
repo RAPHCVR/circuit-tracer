@@ -24,7 +24,7 @@ from engine import (
     summarize_graph_for_target,
 )
 
-st.set_page_config(page_title="Neural Dashboard", layout="wide")
+st.set_page_config(page_title="circuit-tracer dashboard", layout="wide")
 
 
 DEMO_PROMPTS: dict[str, str] = {
@@ -177,14 +177,14 @@ def _render_markdown_report(
     target = analysis.get("target_logit_index", 0)
 
     lines = [
-        "# Neural Dashboard — Demo Report",
+        "# circuit-tracer demo report",
         "",
         "## Prompt",
         "```text",
         str(prompt).strip(),
         "```",
         "",
-        "## Target logit (crux token)",
+        "## Target logit",
         f"- `target_logit_index`: `{int(target)}`",
         "",
     ]
@@ -299,9 +299,9 @@ def _sample_token_id_from_logits(
     return int(torch.multinomial(probs, num_samples=1).item())
 
 
-st.title("Neural Dashboard")
+st.title("circuit-tracer dashboard")
 st.caption(
-    "POC XAI (circuit-tracer) — attribution graphs (target-logit) + interventions (next-token)."
+    "Attribution graphs, feature interventions, and next-token validation for local demos."
 )
 
 
@@ -560,7 +560,7 @@ with col_left:
         current_target = int(analysis.get("target_logit_index", 0))
 
         target_selected = st.radio(
-            "Target logit (crux token)",
+            "Target logit",
             options,
             index=min(current_target, len(options) - 1),
         )
@@ -796,7 +796,7 @@ with col_right:
             (int(feature.layer), int(feature.pos), int(feature.feature_idx), float(value))
         )
 
-    with st.expander("Feature inspection (semantic hints)", expanded=False):
+    with st.expander("Feature inspection (direct logit effects)", expanded=False):
         if not selected_options:
             st.info("Pick at least one feature above to inspect it.")
         else:

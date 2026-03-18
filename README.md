@@ -15,9 +15,9 @@ You can also find circuits and visualize them in one of three ways:
 2. Run `circuit-tracer` via a Python script or Jupyter notebook. Start with our [tutorial notebook](https://github.com/safety-research/circuit-tracer/blob/main/demos/circuit_tracing_tutorial.ipynb). This will work on Colab with the GPU resources provided for free by default - just click on the Colab badge! Check out the **Demos** section below for more tutorials. You can also run these demo notebooks locally, with your own compute.
 3. Run `circuit-tracer` via the command-line interface. This can only be done with your own compute. For more on how to do that, see **Command-Line Interface**. 
 
-## Streamlit Dashboard (local POC)
-This repo also includes a small Streamlit app (`app.py`) intended for demoing:
-- target-logit attribution summaries (pick a “crux token” among top logits),
+## Streamlit Dashboard
+This repo also includes a small local Streamlit app (`app.py`) for attribution and intervention demos:
+- target-logit attribution summaries (pick a target token among top logits),
 - influence-ranked feature lists,
 - next-token validation via `feature_intervention` (before/after distributions),
 - activation-level validation (before/after feature activations for selected nodes),
@@ -40,11 +40,11 @@ On Windows / PowerShell:
 .\run.ps1
 ```
 
-For a short, enterprise-friendly demo script, see `DEMO.md`.
+For a short demo runbook, see `DEMO.md`.
 
 You can also generate demo artifacts (Markdown + JSON) from the CLI:
 ```powershell
-.venv\Scripts\python.exe demo_cli.py --preset capitale_fr
+uv run python demo_cli.py --preset capitale_fr
 ```
 
 The launcher scripts already handle both a local `.venv` and `uv`:
@@ -115,7 +115,7 @@ The unified CLI performs the complete 3-step process for finding and visualizing
 To find a circuit, create the graph files, and start up a local server, use the command:
 
 ```
-circuit-tracer attribute --prompt [prompt] --transcoder_set [transcoder_set] --slug [slug] --graph_file_dir [directory] --slug [slug] --graph_file_dir [graph_file_dir] --server
+circuit-tracer attribute --prompt [prompt] --transcoder_set [transcoder_set] --slug [slug] --graph_file_dir [graph_file_dir] --server
 ```
 
 It will tell you where the server is serving (something like `localhost:[port]`). If you run this command on a remote machine, make sure to enable port forwarding, so you can see the graphs locally!
@@ -183,13 +183,13 @@ circuit-tracer attribute \
 ### Graph Annotation
 When using the `--server` option, your browser will open to a local visualization interface. The interface is the same as in [the original papers](https://transformer-circuits.pub/2025/attribution-graphs/methods.html) (frontend available [here](https://github.com/anthropics/attribution-graphs-frontend)).
 - **Select a node**: Click on a node.
-- **Pin / unpin a node to subgraph pane**: Ctrl+click/Commmand+click the node.
+- **Pin / unpin a node to subgraph pane**: Ctrl+click/Command+click the node.
 - **Annotate a node**: Click on the "Edit" button on the right side of the window while a node is selected to edit its annotation.
 - **Group nodes**: Hold G and click on nodes to group them together into a supernode. Hold G and click on the x next to a supernode to ungroup all of them.
 - **Annotate supernode / node group**: click on the label below the supernode to edit the supernode annotation.
 
 ## Available Transcoders
-The following transcodrs are available for use with `circuit-tracer`; this means that the transcoder weights and features are both available (so features will load properly when you run the visualization server). You can use the HuggingFace repo name (e.g. `mntss/gemma-scope-transcoders`) as the `transcoders` argument of `ReplacementModel.from_pretrained`, or as the argument of `--transcoder_set` in the CLI. 
+The following transcoders are available for use with `circuit-tracer`; this means that the transcoder weights and features are both available (so features will load properly when you run the visualization server). You can use the HuggingFace repo name (e.g. `mntss/gemma-scope-transcoders`) as the `transcoders` argument of `ReplacementModel.from_pretrained`, or as the argument of `--transcoder_set` in the CLI. 
 - Gemma-2 (2B): [PLTs (originally from GemmaScope)](https://huggingface.co/mntss/gemma-scope-transcoders) and CLTs with 2 feature counts: [426K](https://huggingface.co/mntss/clt-gemma-2-2b-426k) and [2.5M](https://huggingface.co/mntss/clt-gemma-2-2b-2.5M)
 - Llama-3.2 (1B): [PLTs](https://huggingface.co/mntss/transcoder-Llama-3.2-1B) and [CLTs](https://huggingface.co/mntss/clt-llama-3.2-1b-524k)
 - Qwen-3 PLTs: for Qwen-3 [0.6B](https://huggingface.co/mwhanna/qwen3-0.6b-transcoders-lowl0), [1.7B](https://huggingface.co/mwhanna/qwen3-1.7b-transcoders-lowl0), [4B](https://huggingface.co/mwhanna/qwen3-4b-transcoders), [8B](https://huggingface.co/mwhanna/qwen3-8b-transcoders), and [14B](https://huggingface.co/mwhanna/qwen3-14b-transcoders-lowl0)

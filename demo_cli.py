@@ -83,7 +83,7 @@ def _render_md(
     activation_validation: dict[str, Any] | None,
 ) -> str:
     lines = [
-        "# Neural Dashboard — CLI Report",
+        "# circuit-tracer CLI report",
         "",
         "## Prompt",
         "```text",
@@ -298,7 +298,7 @@ def run_one(
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Run Neural Dashboard demo(s) from CLI.")
+    p = argparse.ArgumentParser(description="Run circuit-tracer demo workflows from the CLI.")
     p.add_argument("--model", default="google/gemma-2-2b-it")
     p.add_argument("--transcoder-set", default="gemma")
     p.add_argument("--backend", default="transformerlens", choices=["transformerlens", "nnsight"])
